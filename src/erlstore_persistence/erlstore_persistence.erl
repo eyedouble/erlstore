@@ -89,17 +89,16 @@ isTable ( Name ) ->
 infoTable ( Name ) -> 
     ?adaptor:infoTable ( Name ).
 
-createTable ( Name ) ->  
-    TableName = binary_to_atom ( Name, utf8 ), 
-    case isTable ( TableName ) of 
+createTable ( Name ) ->   
+    case isTable ( Name ) of 
         true -> 
             {4002, Name};
         false ->
-            case ?adaptor:createTable ( TableName ) of
+            case ?adaptor:createTable ( Name ) of
                 {atomic, _Status} ->
-                    {2000, TableName};
+                    {2000, Name};
                 _Err ->
-                    {4000, TableName}
+                    {4000, Name}
             end
     end.  
 

@@ -20,6 +20,10 @@
     ,createTable/1
     ,deleteTable/1
     ,subscribe/1
+    ,dumpExport/1
+    ,dumpImport/1
+    ,dumpGetOriginalNode/1
+    ,dumpChangeNode/4
 ]).
 
 %
@@ -139,7 +143,7 @@ infoTable ( Name ) ->
         false -> undefined
     end.        
 
-createTable ( Name ) ->   
+createTable ( Name ) -> 
    case isTable ( Name ) of 
         true -> 
             4002;

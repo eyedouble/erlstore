@@ -2,7 +2,7 @@
 {application, erlstore,
     [
         {description, "erlcms_alphapi"},
-        {vsn, "0.0.1"},
+        {vsn, "0.0.2"},
         {registered, []},
         {mod, {erlstore, []}},
         {applications, [                     
@@ -22,7 +22,7 @@
         ]},
         {modules, []},
         {maintainers, []},
-        {licenses, ["Aapache 2.0"]},
+        {licenses, ["Apache 2.0"]},
         {links, []}
     ]
 }.
