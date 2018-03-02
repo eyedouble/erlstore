@@ -1,0 +1,12 @@
+
+{
+    "id":"d01",
+    "name":"Domain 1",
+    "groups":[
+        "admin",
+        "guest"
+    ],
+    "_system": {
+        "access":"d01:0"
+    }
+}

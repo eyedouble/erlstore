@@ -1,0 +1,28 @@
+
+{application, erlstore,
+    [
+        {description, "erlcms_alphapi"},
+        {vsn, "0.0.1"},
+        {registered, []},
+        {mod, {erlstore, []}},
+        {applications, [                     
+            kernel,
+            stdlib,            
+            cowboy,     
+            jsone,            
+            uuid,
+            pbkdf2,
+            jwt    
+        ]},
+        {included_applications, [
+            mnesia
+        ]},
+        {env, [
+
+        ]},
+        {modules, []},
+        {maintainers, []},
+        {licenses, ["Aapache 2.0"]},
+        {links, []}
+    ]
+}.
