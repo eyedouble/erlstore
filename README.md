@@ -1,6 +1,6 @@
 
 # Erlstore
-
+![Erlstore](https://i.imgur.com/pFJWiF4.png)
 
 
 ## Persistence status codes
