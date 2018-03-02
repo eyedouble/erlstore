@@ -1,12 +1,16 @@
 ![Erlstore](https://i.imgur.com/pFJWiF4.png)
 # Erlstore
-## All the document store you will ever need. Small, fast and scalable.
+The real-time document store build for reliability, 
+magically spreading over both memory and disk storage.
+A modern database with an intuitive REST API and Erlang API.
+Websockets, access control, filtering and a web based control-panel.
 
+**THIS IS AN ALPHA RELEASE Want to contribute? mail vanwel@eyedouble.nl** 
 
-## Document store (CommonCRUD)
+## Document store
 Read section *Tables* if you did not create a table yet.
 All methods take an optional user map as last argument to enable Access Control filtering.
-For consisness these variations of the API are omitted below.
+For consiseness these variations of the API are omitted below.
 
 ### GetAll
 ```erlang 
