@@ -21,7 +21,7 @@
 
 
 ## Key value store (CommonCRUD)
-Read section ![Tables](#tables) if you did not create a table yet.
+Read section *Tables* if you did not create a table yet.
 
 ### GetAll
 ### Get
@@ -32,26 +32,32 @@ Read section ![Tables](#tables) if you did not create a table yet.
 You can filter by any (nested) property on your document.
 See the table below for operators.
 
-`persistence:filter ( Table, Filters, User )`.
+```erlang
+erlstore_persistence:filter ( Table, Filters, User ).
+```
 
 Filters must be a list of tuples, a filter tuple consists of property, operator, value. 
 See the example below.
 
-`persistence:filter ( Table, [{ <<"_system.created">>, <<">=">>, 1519138939 }], User )`
+```erlang
+erlstore:persistence:filter ( Table, [{ <<"_system.created">>, <<">=">>, 1519138939 }], User ).
+```
 
 Example object that would match:
 
-`{
-    "id": "c6a007de-4b82-4008-9b5c-d009e55782ae",
-    "name": "kak3",
-    "_system": {
-        "access": "superadmin",
-        "created": 1519138939,
-        "last_editor": "superadmin",
-        "owner": "superadmin",
-        "updated": 1519138939
+```erlang 
+#{
+    "id" => "c6a007de-4b82-4008-9b5c-d009e55782ae",
+    "name" => "kak",
+    "_system" => #{
+        "access" => "superadmin",
+        "created" => 1519138939,
+        "last_editor" => "superadmin",
+        "owner" => "superadmin",
+        "updated" => 1519138939
     }            
-}`
+}
+```
 
 #### Operators
 | Operator      | Description              |
@@ -60,16 +66,20 @@ Example object that would match:
 | isnotset      | Is not set               | 
 | =             | Exactly equal to         | 
 | /             | Exactly not equal to     | 
-| <             | Exactly equal to         | 
-| =<            | Exactly equal to         | 
+| <             | Lower than               | 
+| =<            | Equal to or lower than   | 
 | >             | Greater than             | 
-
+| >=            | Equal to or greater than | 
 
 
 
 ## Tables
 ### Create
+```erlang 
+> erlstore_persistence:createTable ( my_table ).
+```
 ### Delete
+```erlang erlstore_persistence:deleteTable ( my_table ).```
 
 ## Domains
 ### Create
@@ -79,7 +89,7 @@ Groups is of type list of strings.
 
 Eg.
 
-`{ "name":"Example domain", "groups":["admin", "guests"] }`
+```erlang #{ <<"name">> => <<"Example domain">>, <<"groups">> => [ <<"admin">>, <<"guests">> ] }```
 
 ### Delete
 
@@ -91,7 +101,7 @@ Domain is a combination of the `domain` id and `domain group list position` sepe
 
 Eg.
 
-`6a3e55d2-5344-4226-a136-a6cf18d3bccc:0`
+```erlang <<"6a3e55d2-5344-4226-a136-a6cf18d3bccc:0">>```
 
 
 ### Delete
@@ -106,9 +116,9 @@ All functions of the API have a AC variant and one without.
 
 Eg. With and without AC respectively.
 
-`persistence:get ( movies, <<"abf18cca-fe78-48b7-a465-b00ae8d9fc44">>, UserObject )`
+```erlang erlstore_persistence:get ( movies, <<"abf18cca-fe78-48b7-a465-b00ae8d9fc44">>, User )```
 
-`persistence:get ( movies, <<"abf18cca-fe78-48b7-a465-b00ae8d9fc44">> )`
+```erlang erlstore_persistence:get ( movies, <<"abf18cca-fe78-48b7-a465-b00ae8d9fc44">> )```
 
 
 > ## Don't drink too much of the cool-aid
@@ -117,6 +127,41 @@ Eg. With and without AC respectively.
 > SuperAdmin permissions. Hence 'normal' users cannot access them.
 > 
 > Using non AC variant of the API is like typing `sudo` in your terminal.
-> It's not bad, but it carries extra responsibility!
+> It's not bad, but it comes with extra responsibility!
 >
 
+## Change feeds (α)
+Erlstore currently supports basic change feeds. The Access control sytem is not yet implemented on these feeds, nor is filtering. *GEEKNOTE: Access control actualy uses the filter module to do the job hence these two go in tandem.*
+
+The change feeds work on a per table basis. This means you will listen to changes on a specific table and receive messages if something in that table changes. It is as easy as that.
+
+### Subscribe
+```erlang erlstore_persistence:subscribe ( Pid, Table ).```
+
+As `Pid` is the process that will receive messages and `Table` is the table to subscribe to.
+Messages are standard Erlang messages.
+
+### Change types
+- Create
+- Update
+- Delete
+
+#### Structure
+```erlang 
+{ ChangeType, Table, Data, [OldData] }
+```
+
+#### Create
+```erlang 
+{create, my_table, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 3 } }
+```
+
+#### Update
+```erlang 
+{update, my_table, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 9 }, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 3 } }
+```
+
+#### Dete
+```erlang 
+{delete, my_table, <<"my_new_document">> }
+```
