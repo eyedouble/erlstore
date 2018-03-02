@@ -1,7 +1,7 @@
 
 {application, erlstore,
     [
-        {description, "erlcms_alphapi"},
+        {description, "erlstore"},
         {vsn, "0.0.2"},
         {registered, []},
         {mod, {erlstore, []}},
