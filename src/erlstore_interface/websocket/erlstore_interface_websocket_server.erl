@@ -1,5 +1,5 @@
 
--module(interface_websocket_server).
+-module(erlstore_interface_websocket_server).
 
 -include("dev.hrl").
 
@@ -11,7 +11,7 @@
 start ( Port ) ->
     
     Handlers = [             
-        {"/", interface_websocket_handler, [] }   
+        {"/", erlstore_interface_websocket_handler, [] }   
     ],
     Dispatch = cowboy_router:compile([
         {'_', Handlers }            
@@ -22,7 +22,7 @@ start ( Port ) ->
             env => #{dispatch => Dispatch},
             middlewares => [
                 cowboy_router, 
-                interface_websocket_middleware, 
+                erlstore_interface_websocket_middleware, 
                 cowboy_handler
             ]
         }

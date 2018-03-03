@@ -1,5 +1,5 @@
 
--module(interface_http_json_response).
+-module(erlstore_interface_http_json_response).
 
 -include("dev.hrl").
 

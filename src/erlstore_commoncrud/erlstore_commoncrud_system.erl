@@ -1,5 +1,5 @@
 
--module (commoncrud_system).
+-module (erlstore_commoncrud_system).
 
 -export([
     generate/2
@@ -19,8 +19,8 @@ new ( Data, User ) when is_map ( User ) ->
     Data#{ 
         <<"_system">> => #{
             <<"access">> => maps:get ( <<"domain">>, User ),
-            <<"created">> => utils:unixtime(),
-            <<"updated">> => utils:unixtime(),
+            <<"created">> => erlstore_utils:unixtime(),
+            <<"updated">> => erlstore_utils:unixtime(),
             <<"owner">> => maps:get ( <<"id">>, User ),
             <<"last_editor">> => maps:get ( <<"id">>, User )
         } 
@@ -29,7 +29,7 @@ new ( Data, User ) when is_map ( User ) ->
 update ( Data=#{ <<"_system">> := CurrentSystem }, User ) when is_map ( User ) ->
     Data#{ <<"_system">> => 
         CurrentSystem#{ 
-            <<"updated">> := utils:unixtime(),
+            <<"updated">> := erlstore_utils:unixtime(),
             <<"last_editor">> := maps:get ( <<"id">>, User )
         }
     }.

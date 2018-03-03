@@ -1,4 +1,4 @@
--module(interface_http_common_handler).
+-module(erlstore_interface_http_common_handler).
 
 -behaviour(cowboy_handler).
 
@@ -18,14 +18,14 @@ init ( Request=#{method := <<"OPTIONS">>}, State ) ->
     options ( Request, State );
 
 init ( Request=#{ headers := #{ <<"authorization">> := Token } }, State ) ->
-    case interface_auth:token ( decode, Token, <<"secretkey">> ) of 
+    case erlstore_interface_auth:token ( decode, Token, <<"secretkey">> ) of 
         {error, expired} ->            
-            interface_http_json_response:respond ( Request, State, {5000, Token}, 401);
+            erlstore_interface_http_json_response:respond ( Request, State, {5000, Token}, 401);
         {ok, #{ <<"data">> := User, <<"exp">> := ExpiryTime } } ->            
-            case ExpiryTime - utils:unixtime() of 
+            case ExpiryTime - erlstore_utils:unixtime() of 
                 TimeLeft when TimeLeft < 300 ->
                     init ( 
-                            cowboy_req:set_resp_header(<<"Authorization">>,interface_auth:token ( generate, User, <<"secretkey">>, 900 ), Request ),
+                            cowboy_req:set_resp_header(<<"Authorization">>,erlstore_interface_auth:token ( generate, User, <<"secretkey">>, 900 ), Request ),
                             State, User 
                         );
                 _True ->
@@ -72,7 +72,7 @@ options ( Request=#{method := <<"OPTIONS">>}, State ) ->
      response ( Request, State, {2000, ok} ).
 
 response ( Request, State, Data ) ->    
-    interface_http_json_response:respond ( Request, State, Data ).
+    erlstore_interface_http_json_response:respond ( Request, State, Data ).
 
 error ( Request, State ) ->
     response ( Request, State, {3000, <<"Invalid operation">>} ).

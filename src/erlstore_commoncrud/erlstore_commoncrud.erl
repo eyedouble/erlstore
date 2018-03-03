@@ -1,5 +1,5 @@
 
--module(commoncrud).
+-module(erlstore_commoncrud).
 
 -include("dev.hrl").
 

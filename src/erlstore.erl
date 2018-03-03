@@ -16,10 +16,14 @@
 ]).
 
 start(_Type, _Args) ->   
-    Response = erlstore_sup:start_link(),    
+    Response = erlstore_sup:start_link(),   
+
+    % ----- STANDALONE ------ % 
     % boot ( "data/db" ),
     % bootHttp ( 8090 ),
     % bootWebsocket ( 8091 ),
+    % ------------------------%
+
     Response.
 
 stop(State) -> 
@@ -31,12 +35,12 @@ boot ( Directory ) ->
 
 bootHttp ( Port ) ->
     {ok, HttpServerPid} = supervisor:start_child( erlstore_sup, 
-        {interface_http_server, {interface_http_server, start, [Port]}, 
-            permanent, brutal_kill, worker, [interface_http_server]} 
+        {erlstore_interface_http_server, {erlstore_interface_http_server, start, [Port]}, 
+            permanent, brutal_kill, worker, [erlstore_interface_http_server]} 
     ).
 
 bootWebsocket ( Port ) ->
     {ok, WebsocketServerPid} = supervisor:start_child( erlstore_sup, 
-        {interface_websocket_server, {interface_websocket_server, start, [Port]}, 
-            permanent, brutal_kill, worker, [interface_websocket_server]} 
+        {erlstore_interface_websocket_server, {erlstore_interface_websocket_server, start, [Port]}, 
+            permanent, brutal_kill, worker, [erlstore_interface_websocket_server]} 
     ).

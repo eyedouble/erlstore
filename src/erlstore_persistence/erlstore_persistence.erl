@@ -3,7 +3,7 @@
 
 -include("dev.hrl").
 
--define(adaptor, mnesia_adaptor).
+-define(adaptor, erlstore_mnesia_adaptor).
 -define(superuser, #{ <<"id">> => <<"superadmin">>, <<"domain">> => <<"superadmin:0">> } ).
 
 -export([
@@ -55,7 +55,7 @@ create ( Table, Data ) ->
     create ( Table, Data, ?superuser ).
 
 create ( Table, Data, User ) when is_map ( Data ) ->   
-    Id = utils:uuid ( ),
+    Id = erlstore_utils:uuid ( ),
     Object = Data#{ <<"id">> => Id }, 
     ?MODULE:update ( Table, Object, User ).
 
@@ -63,7 +63,7 @@ update ( Table, Data ) ->
     update ( Table, Data, ?superuser ).
 
 update ( Table, Data=#{ <<"id">> := Id }, User ) when is_map ( Data ) -> 
-    Object = commoncrud_system:generate ( Data, User ),    
+    Object = erlstore_commoncrud_system:generate ( Data, User ),    
     ?adaptor:write ( Table, Id, Object ).
 
 delete ( Table, Id ) ->
@@ -109,14 +109,14 @@ deleteTable ( Name ) ->
 % Domains
 %
 createDomain ( Domain=#{ <<"groups">> := Groups } ) when is_list ( Groups ) ->    
-    Id = utils:uuid ( ),    
+    Id = erlstore_utils:uuid ( ),    
     updateDomain ( Domain#{ <<"id">> => Id } );
 
 createDomain ( Domain ) ->
     {4020, Domain}.
 
 updateDomain ( Domain=#{ <<"id">> := Id, <<"groups">> := Groups } ) when is_list ( Groups ) ->    
-    DomainWithSystem = commoncrud_system:generate ( 
+    DomainWithSystem = erlstore_commoncrud_system:generate ( 
         Domain, 
         #{ <<"id">> => Id, <<"domain">> => <<Id/binary, ":0">> } 
     ),
@@ -135,13 +135,13 @@ deleteDomain ( Domain ) ->
 % Users
 %
 createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
-    case utils:convertDomainString ( Domain ) of
+    case erlstore_utils:convertDomainString ( Domain ) of
         {DomainId, Group} ->
             case ?MODULE:get ( domains, DomainId ) of
                 {2000, _Domain} ->    
                     case ?MODULE:get ( users, Id ) of
                         {4000, _NoMatch} ->
-                            case ?adaptor:write ( users, Id, commoncrud_system:generate ( User, User ) ) of
+                            case ?adaptor:write ( users, Id, erlstore_commoncrud_system:generate ( User, User ) ) of
                                 {2000, CreatedUser } ->
                                     {2000, CreatedUser};
                                 _True ->

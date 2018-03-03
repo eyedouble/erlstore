@@ -1,5 +1,5 @@
 
--module(commoncrud_filter_tests).
+-module(erlstore_commoncrud_filter_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -12,7 +12,7 @@ mock ( ) ->
 
 
 filter_onelevel_test ( ) ->
-    Result = commoncrud_filter:filter ( 
+    Result = erlstore_commoncrud_filter:filter ( 
       mock ()
       ,<<"_system">>
       ,<<"isset">>
@@ -20,7 +20,7 @@ filter_onelevel_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_threelevel_test ( ) ->
-    Result = commoncrud_filter:filter ( 
+    Result = erlstore_commoncrud_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"isset">>
@@ -28,7 +28,7 @@ filter_threelevel_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_isnotset_test ( ) ->
-    Result = commoncrud_filter:filter ( 
+    Result = erlstore_commoncrud_filter:filter ( 
       mock ()
       ,<<"_system.times.created.kak">>
       ,<<"isnotset">>
@@ -36,7 +36,7 @@ filter_isnotset_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_isnotset_negative_test ( ) ->
-    Result = commoncrud_filter:filter ( 
+    Result = erlstore_commoncrud_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"isnotset">>
@@ -44,7 +44,7 @@ filter_isnotset_negative_test ( ) ->
     ?assert ( Result =:= false ).
   
 filter_equals_test ( ) ->
-    Result = commoncrud_filter:filter ( 
+    Result = erlstore_commoncrud_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"=">>

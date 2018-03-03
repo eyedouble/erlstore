@@ -1,5 +1,5 @@
 
--module(mnesia_adaptor).
+-module(erlstore_mnesia_adaptor).
 
 -behaviour(erlstore_persistence_adaptor).
 
@@ -46,7 +46,7 @@ getAll ( Table, User ) ->
                 Data                    
                 ||                    
                 {_Type, _DId, Data} <- mnesia:table(Table),
-                commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
+                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
 
             ]
         ) )
@@ -62,7 +62,7 @@ get ( Table, Id, User ) ->
                 ||                    
                 {_Type, DId, Data} <- mnesia:table(Table),     
                 DId =:= Id,            
-                commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
+                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
 
             ]
         ) )
@@ -91,7 +91,7 @@ write ( Table, Id, Data ) ->
 delete ( Table, Id, User ) ->
     F = fun() ->    
         [{_Table, _Id, Data }] = mnesia:read ( {Table, Id} ),
-        case commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )) of
+        case erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )) of
             true -> 
                 mnesia:delete ( Table, Id, write )            
         end       
@@ -113,9 +113,9 @@ filter ( Table, Filters, User ) ->
                 Data                    
                 ||                    
                 {_Type, _DId, Data} <- mnesia:table(Table),
-                commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )),
+                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )),
                 lists:foldl(fun( { Property, Operator, Value }, Sum) ->                    
-                    case { Sum, commoncrud_filter:filter ( Data, Property, Operator, Value ) } of
+                    case { Sum, erlstore_commoncrud_filter:filter ( Data, Property, Operator, Value ) } of
                         {false, _ } ->
                             false;
                         {true, CheckResponse} ->

@@ -2,7 +2,7 @@
 {application, erlstore,
     [
         {description, "erlstore"},
-        {vsn, "0.0.2"},
+        {vsn, "0.0.3"},
         {registered, []},
         {mod, {erlstore, []}},
         {applications, [                     

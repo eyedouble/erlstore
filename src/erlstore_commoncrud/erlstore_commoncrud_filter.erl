@@ -1,5 +1,5 @@
 
--module(commoncrud_filter).
+-module(erlstore_commoncrud_filter).
 
 -include("dev.hrl").
 
@@ -55,6 +55,6 @@ hasAccess ( _DataDomain, <<"superadmin:0">> ) ->
     true;
 
 hasAccess ( DataDomainString, Accessor ) ->    
-    {DataDomain, DataGroup} = utils:convertDomainString ( DataDomainString ),
-    {AccessorDomain, AccessorGroup} = utils:convertDomainString ( Accessor ),   
+    {DataDomain, DataGroup} = erlstore_utils:convertDomainString ( DataDomainString ),
+    {AccessorDomain, AccessorGroup} = erlstore_utils:convertDomainString ( Accessor ),   
     AccessorDomain =:= DataDomain andalso AccessorGroup =< DataGroup.

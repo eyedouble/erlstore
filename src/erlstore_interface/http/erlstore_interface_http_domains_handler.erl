@@ -1,11 +1,11 @@
 
--module(interface_http_domains_handler).
+-module(erlstore_interface_http_domains_handler).
 
 -behaviour(cowboy_handler).
 
 -include ( "dev.hrl" ).
 
--define(common_handler, interface_http_common_handler).
+-define(common_handler, erlstore_interface_http_common_handler).
 
 -export([
     init/2
@@ -18,14 +18,14 @@ init ( Request=#{method := <<"OPTIONS">>}, State ) ->
     ?common_handler:options ( Request, State );
 
 init ( Request=#{ headers := #{ <<"authorization">> := Token } }, State ) ->
-    case interface_auth:token ( decode, Token, <<"secretkey">> ) of 
+    case erlstore_interface_auth:token ( decode, Token, <<"secretkey">> ) of 
         {error, expired} ->            
-            interface_http_json_response:respond ( Request, State, {5000, Token}, 401);
+            erlstore_interface_http_json_response:respond ( Request, State, {5000, Token}, 401);
         {ok, #{ <<"data">> := User, <<"exp">> := ExpiryTime } } ->            
-            case ExpiryTime - utils:unixtime() of 
+            case ExpiryTime - erlstore_utils:unixtime() of 
                 TimeLeft when TimeLeft < 300 ->
                     init ( 
-                            cowboy_req:set_resp_header(<<"Authorization">>,interface_auth:token ( generate, User, <<"secretkey">>, 900 ), Request ),
+                            cowboy_req:set_resp_header(<<"Authorization">>,erlstore_interface_auth:token ( generate, User, <<"secretkey">>, 900 ), Request ),
                             State, User 
                         );
                 _True ->

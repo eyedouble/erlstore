@@ -1,5 +1,5 @@
 
--module(interface_websocket_middleware).
+-module(erlstore_interface_websocket_middleware).
 
 -behaviour(cowboy_middleware).
 

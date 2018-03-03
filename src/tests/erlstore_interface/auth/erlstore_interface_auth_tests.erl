@@ -1,5 +1,5 @@
 
--module(interface_auth_tests).
+-module(erlstore_interface_auth_tests).
 
 -include ( "dev.hrl" ).
 -include_lib("eunit/include/eunit.hrl").
@@ -14,7 +14,7 @@
 }).
 
 password_hash_test ( ) ->    
-    Key = interface_auth:password ( hash, 
+    Key = erlstore_interface_auth:password ( hash, 
                     <<"password">>,
                     <<"salt">>
                     ),
@@ -26,22 +26,22 @@ token_generate_test ( ) ->
         {user_id, 42},
         {username, <<"vanwel@eyedouble.nl">>}
     ],
-    Res = interface_auth:token (generate, Claims, ?key, ?expiration_time ),
+    Res = erlstore_interface_auth:token (generate, Claims, ?key, ?expiration_time ),
     ?assert ( is_binary ( Res ) ).
 
 token_verify_expired_test ( ) -> 
     ExpiredToken = <<"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTIxMjQ5NjAsInVzZXJfaWQiOjQyLCJ1c2VybmFtZSI6InZhbndlbEBleWVkb3VibGUubmwifQ.VE6qj2NcwjxIdUWcPabZSJ79p7qWTMp9IqQ9EPNNrz8">>,
-    Res = interface_auth:token (verify, ExpiredToken, ?key ),
+    Res = erlstore_interface_auth:token (verify, ExpiredToken, ?key ),
     ?assert ( Res == error ).
 
 token_verify_valid_test ( ) -> 
     ValidToken = <<"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0MiwidXNlcm5hbWUiOiJ2YW53ZWxAZXllZG91YmxlLm5sIn0.WyG7x3Hb9ncP1wM-2F35asTSZ1hhyJjc-5Ro7Xgf4L4">>,
-    Res = interface_auth:token (verify, ValidToken, ?key ),
+    Res = erlstore_interface_auth:token (verify, ValidToken, ?key ),
     ?assert ( Res == ok ).
 
 credentials_check_test ( ) -> 
     Data = #mock{},
-    Res = interface_auth:credentials ( check,
+    Res = erlstore_interface_auth:credentials ( check,
         { Data#mock.username, Data#mock.username },
         { Data#mock.password, Data#mock.salt, Data#mock.hash }
     ),        
@@ -49,7 +49,7 @@ credentials_check_test ( ) ->
 
 credentials_check_fail_test ( ) -> 
     Data = #mock{},           
-    Res = interface_auth:credentials ( check,
+    Res = erlstore_interface_auth:credentials ( check,
         { Data#mock.username, <<"roepie">> },
         { Data#mock.password, Data#mock.salt, Data#mock.hash }
     ),

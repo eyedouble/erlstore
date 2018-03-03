@@ -1,5 +1,5 @@
 
--module(interface_http_server).
+-module(erlstore_interface_http_server).
 
 -include("dev.hrl").
 
@@ -11,14 +11,14 @@
 start ( Port ) ->   
     
     Handlers = [             
-        {"/domains/[:id]", interface_http_domains_handler, [] }
-        ,{"/users/[:id]", interface_http_users_handler, [] }
-        ,{"/tables/[:action]", interface_http_tables_handler, [] }
-        ,{"/auth/[:action]", interface_http_auth_handler, [] }
+        {"/domains/[:id]", erlstore_interface_http_domains_handler, [] }
+        ,{"/users/[:id]", erlstore_interface_http_users_handler, [] }
+        ,{"/tables/[:action]", erlstore_interface_http_tables_handler, [] }
+        ,{"/auth/[:action]", erlstore_interface_http_auth_handler, [] }
         ,{"/admin", cowboy_static, {priv_file, erlstore, "www-admin/index.html", [{mimetypes, {<<"text">>, <<"html">>, []}}]} }
         ,{"/admin/[...]", cowboy_static, {priv_dir, erlstore, "www-admin", [{mimetypes, cow_mimetypes, all}] } }        
-        ,{"/:table/:id", interface_http_common_handler, [] }      
-        ,{"/:table", interface_http_common_handler, [] }
+        ,{"/:table/:id", erlstore_interface_http_common_handler, [] }      
+        ,{"/:table", erlstore_interface_http_common_handler, [] }
     ],
     Dispatch = cowboy_router:compile([
         {'_', Handlers }            

@@ -1,5 +1,5 @@
 
--module(interface_auth).
+-module(erlstore_interface_auth).
 
 -include("dev.hrl").
 

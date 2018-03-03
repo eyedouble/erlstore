@@ -1,11 +1,11 @@
 
--module(interface_http_tables_handler).
+-module(erlstore_interface_http_tables_handler).
 
 -behaviour(cowboy_handler).
 
 -include ( "dev.hrl" ).
 
--define(common_handler, interface_http_common_handler).
+-define(common_handler, erlstore_interface_http_common_handler).
 
 -export([
     init/2

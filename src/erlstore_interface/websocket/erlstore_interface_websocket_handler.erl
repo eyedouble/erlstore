@@ -1,5 +1,5 @@
 
--module(interface_websocket_handler).
+-module(erlstore_interface_websocket_handler).
 
 -behaviour(cowboy_handler).
 
