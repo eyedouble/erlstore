@@ -62,7 +62,7 @@ create ( Table, Data, User ) when is_map ( Data ) ->
         false ->
             Data
     end,
-    ObjectWithId = Object#{ <<"id">> => Id }
+    ObjectWithId = Object#{ <<"id">> => Id },
     ?MODULE:update ( Table, ObjectWithId, User ).
 
 update ( Table, Data ) ->
