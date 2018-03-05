@@ -55,9 +55,15 @@ create ( Table, Data ) ->
     create ( Table, Data, ?superuser ).
 
 create ( Table, Data, User ) when is_map ( Data ) ->   
-    Id = erlstore_utils:uuid ( ),
-    Object = Data#{ <<"id">> => Id }, 
-    ?MODULE:update ( Table, Object, User ).
+    Id = erlstore_utils:uuid ( ),   
+    Object = case maps:is_key ( <<"_system">>, Data ) of
+        true ->            
+            maps:remove ( <<"_system">>, Data );
+        false ->
+            Data
+    end,
+    ObjectWithId = Object#{ <<"id">> => Id }
+    ?MODULE:update ( Table, ObjectWithId, User ).
 
 update ( Table, Data ) ->
     update ( Table, Data, ?superuser ).
