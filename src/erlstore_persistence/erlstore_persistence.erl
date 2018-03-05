@@ -114,6 +114,9 @@ deleteTable ( Name ) ->
 %
 % Domains
 %
+createDomain ( Domain=#{ <<"groups">> := _Groups, <<"_system">> := _System } ) -> 
+     createDomain ( maps:remove ( <<"_system">>, Domain ) );
+
 createDomain ( Domain=#{ <<"groups">> := Groups } ) when is_list ( Groups ) ->    
     Id = erlstore_utils:uuid ( ),    
     updateDomain ( Domain#{ <<"id">> => Id } );
@@ -140,6 +143,9 @@ deleteDomain ( Domain ) ->
 %
 % Users
 %
+createUser ( User=#{ <<"id">> := _Id, <<"domain">> := _Domain, <<"_system">> := _System } ) ->
+    createUser ( maps:remove ( <<"_system">>, User ) );
+
 createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
     case erlstore_utils:convertDomainString ( Domain ) of
         {DomainId, Group} ->
