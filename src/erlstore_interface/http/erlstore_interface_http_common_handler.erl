@@ -9,6 +9,8 @@
     ,response/3
     ,options/2
     ,error/2
+    ,parseFilterParams/1
+    ,parseFilterExpression/1
 ]).
 
 %
