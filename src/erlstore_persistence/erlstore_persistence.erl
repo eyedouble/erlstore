@@ -29,6 +29,7 @@
     ,createUser/1
     ,deleteUser/1
     ,subscribe/2
+    ,subscribe/3
     ,dump/2
 ]).
 
