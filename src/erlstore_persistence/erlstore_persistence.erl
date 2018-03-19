@@ -208,20 +208,13 @@ subscribe ( listen, Pid, Table ) ->
 
 dump ( import, FileName ) ->  
     OriginalNode = ?adaptor:dumpGetOriginalNode ( FileName ++ ".erlstoredump" ),   
-    ?PRINT ( OriginalNode ),
     NewFileName = FileName ++ "-nc." ++ atom_to_list( node() ) ++ ".erlstoredump",
-    ?PRINT ( NewFileName ),
     case OriginalNode =:= node () of        
         true -> 
-            E = ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
-            ?PRINT ( E ),
-            E;
+            ?adaptor:dumpImport ( FileName ++ ".erlstoredump" );
         false ->            
-            Q = ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
-            ?PRINT ( Q ),
-            W = ?adaptor:dumpImport ( NewFileName ),
-            ?PRINT ( W ),
-            W
+            ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
+            ?adaptor:dumpImport ( NewFileName )
     end;
 
 dump ( export, FileName ) ->
