@@ -212,17 +212,12 @@ dumpGetOriginalNode ( FileName ) ->
     OriginalNode.
 
 dumpChangeNode ( FileName, NewFileName, OriginalNode, NewNode ) ->
-    Z = change_node_name(mnesia_backup, OriginalNode, NewNode, FileName, NewFileName ),
-    ?PRINT ( Z ),
-    Z.
+    change_node_name(mnesia_backup, OriginalNode, NewNode, FileName, NewFileName ).
 
 % PRIVATE
 initTables ( ) -> 
-    F = createTable ( domains ),
-    ?PRINT ( F ),
-    G = createTable ( users ),
-    ?PRINT ( G ),
-    G.
+    createTable ( domains ),
+    createTable ( users ).
 
 change_node_name(Mod, From, To, Source, Target) ->
     Switch =
