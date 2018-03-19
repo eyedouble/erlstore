@@ -211,17 +211,17 @@ dump ( import, FileName ) ->
     ?PRINT ( OriginalNode ),
     NewFileName = FileName ++ "-nc." ++ atom_to_list( node() ) ++ ".erlstoredump",
     ?PRINT ( NewFileName ),
-    case OriginalNode =/= node () of
+    case OriginalNode =:= node () of        
+        true -> 
+            E = ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
+            ?PRINT ( E ),
+            E;
         false ->            
             Q = ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
             ?PRINT ( Q ),
             W = ?adaptor:dumpImport ( NewFileName ),
             ?PRINT ( W ),
-            W;
-        true -> 
-            E = ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
-            ?PRINT ( E ),
-            E
+            W
     end;
 
 dump ( export, FileName ) ->
