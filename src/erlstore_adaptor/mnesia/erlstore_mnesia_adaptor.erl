@@ -212,7 +212,9 @@ dumpGetOriginalNode ( FileName ) ->
     OriginalNode.
 
 dumpChangeNode ( FileName, NewFileName, OriginalNode, NewNode ) ->
-    change_node_name(mnesia_backup, OriginalNode, NewNode, FileName, NewFileName ).
+    Z = change_node_name(mnesia_backup, OriginalNode, NewNode, FileName, NewFileName ),
+    ?PRINT ( Z ),
+    Z.
 
 % PRIVATE
 initTables ( ) -> 
