@@ -30,11 +30,17 @@
 % Instance
 %
 start ( Path ) ->
-    application:set_env ( mnesia, dir, "data/db" ),
-    mnesia:create_schema ( [node()] ),
-    mnesia:start ( ),    
-    mnesia:wait_for_tables ( listTables (), 2000 ),
-    initTables ( ).
+    A = application:set_env ( mnesia, dir, "data/db" ),
+    ?PRINT ( A ),
+    B = mnesia:create_schema ( [node()] ),
+    ?PRINT ( B ),
+    C = mnesia:start ( ),  
+    ?PRINT ( C ),
+    D = mnesia:wait_for_tables ( listTables (), 2000 ),
+    ?PRINT ( D ),
+    E = initTables ( ),
+    ?PRINT ( E ),
+    E.
 
 %
 % CommonCRUD
@@ -210,8 +216,11 @@ dumpChangeNode ( FileName, NewFileName, OriginalNode, NewNode ) ->
 
 % PRIVATE
 initTables ( ) -> 
-    createTable ( domains ),
-    createTable ( users ).
+    F = createTable ( domains ),
+    ?PRINT ( F ),
+    G = createTable ( users ),
+    ?PRINT ( G ),
+    G.
 
 change_node_name(Mod, From, To, Source, Target) ->
     Switch =
