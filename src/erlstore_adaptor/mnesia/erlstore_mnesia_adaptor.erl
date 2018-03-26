@@ -32,7 +32,7 @@
 start ( Path ) ->
     case filelib:is_dir ( Path ) of
         true -> 
-            application:set_env ( mnesia, dir, "data/db" ), 
+            application:set_env ( mnesia, dir, Path ), 
             mnesia:create_schema ( [node()] ),
             mnesia:start ( ),
             mnesia:wait_for_tables ( listTables (), 2000 ),
