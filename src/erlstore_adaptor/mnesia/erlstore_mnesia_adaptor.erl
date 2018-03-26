@@ -30,17 +30,16 @@
 % Instance
 %
 start ( Path ) ->
-    A = application:set_env ( mnesia, dir, "data/db" ),
-    ?PRINT ( A ),
-    B = mnesia:create_schema ( [node()] ),
-    ?PRINT ( B ),
-    C = mnesia:start ( ),  
-    ?PRINT ( C ),
-    D = mnesia:wait_for_tables ( listTables (), 2000 ),
-    ?PRINT ( D ),
-    E = initTables ( ),
-    ?PRINT ( E ),
-    E.
+    case filelib:is_dir ( Path ) of
+        true -> 
+            application:set_env ( mnesia, dir, "data/db" ), 
+            mnesia:create_schema ( [node()] ),
+            mnesia:start ( ),
+            mnesia:wait_for_tables ( listTables (), 2000 ),
+            initTables ( );
+        false -> 
+            {4000, invalid_path}
+     end.
 
 %
 % CommonCRUD
