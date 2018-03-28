@@ -25,6 +25,7 @@
     ,createTable/1
     ,deleteTable/1
     ,createDomain/1
+    ,updateDomain/1
     ,deleteDomain/1
     ,createUser/1
     ,deleteUser/1
