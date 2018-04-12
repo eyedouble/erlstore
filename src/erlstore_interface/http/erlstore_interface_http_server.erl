@@ -12,6 +12,7 @@ start ( Port ) ->
     
     Handlers = [             
         {"/domains/[:id]", erlstore_interface_http_domains_handler, [] }
+        ,{"/files/[:id]", erlstore_interface_http_file_handler, [] }
         ,{"/users/[:id]", erlstore_interface_http_users_handler, [] }
         ,{"/tables/[:action]", erlstore_interface_http_tables_handler, [] }
         ,{"/auth/[:action]", erlstore_interface_http_auth_handler, [] }
