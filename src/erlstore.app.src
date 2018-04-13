@@ -2,7 +2,7 @@
 {application, erlstore,
     [
         {description, "erlstore"},
-        {vsn, "0.0.4"},
+        {vsn, "0.0.5"},
         {registered, []},
         {mod, {erlstore, []}},
         {applications, [                     
@@ -22,7 +22,7 @@
         ]},
         {modules, []},
         {maintainers, []},
-        {licenses, ["Apache 2.0"]},
+        {licenses, ["MIT"]},
         {links, []}
     ]
 }.
