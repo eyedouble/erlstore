@@ -81,16 +81,18 @@ Example object that would match:
 ```
 
 ### Operators
-| Operator      | Description              |
-| ------------- |:------------------------:| 
-| isset         | Is set                   | 
-| isnotset      | Is not set               | 
-| =             | Exactly equal to         | 
-| /             | Exactly not equal to     | 
-| <             | Lower than               | 
-| =<            | Equal to or lower than   | 
-| >             | Greater than             | 
-| >=            | Equal to or greater than | 
+| Operator      | Description                   |
+| ------------- |:-----------------------------:| 
+| isset         | Is set                        | 
+| isnotset      | Is not set                    | 
+| =             | Exactly equal to              | 
+| /             | Exactly not equal to          | 
+| <             | Lower than                    | 
+| =<            | Equal to or lower than        | 
+| >             | Greater than                  | 
+| >=            | Equal to or greater than      | 
+| fllen         | Flat list length equals       | 
+| flmem         | Flat list has exactly member  | 
 
 
 
