@@ -212,7 +212,8 @@ dump ( import, FileName ) ->
     NewFileName = FileName ++ "-nc." ++ atom_to_list( node() ) ++ ".erlstoredump",
     case OriginalNode =:= node () of        
         true -> 
-            ?adaptor:dumpImport ( FileName ++ ".erlstoredump" );
+            ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
+            file:rename ( Filname ++ ".erlstoredump", "imported_" ++ FileName ++ ".erlstoredump" );
         false ->            
             ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
             ?adaptor:dumpImport ( NewFileName )
