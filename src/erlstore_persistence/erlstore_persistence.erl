@@ -12,6 +12,7 @@
     ,getAll/2
     ,get/2
     ,get/3    
+    ,create/2
     ,create/3    
     ,update/2
     ,update/3
@@ -137,7 +138,7 @@ updateDomain ( Domain=#{ <<"id">> := Id, <<"groups">> := Groups } ) when is_list
 updateDomain ( Domain ) ->
     {4020, Domain}.
 
-deleteDomain ( Domain ) ->
+deleteDomain ( _Domain ) ->
     % ONLY ALLOWED ONCE ALL USERS THAT ARE PART OF DOMAIN ARE GONE!!
     % ONLY ALLOWED ONCE ALL DOCUMENTS THAT ARE WITHIN THE DOMAIN ARE GONE!!
     {4000, <<"NOT IMPLETMENTED YET">>}.
@@ -150,7 +151,7 @@ createUser ( User=#{ <<"id">> := _Id, <<"domain">> := _Domain, <<"_system">> := 
 
 createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
     case erlstore_utils:convertDomainString ( Domain ) of
-        {DomainId, Group} ->
+        {DomainId, _Group} ->
             case ?MODULE:get ( domains, DomainId ) of
                 {2000, _Domain} ->    
                     case ?MODULE:get ( users, Id ) of
@@ -161,7 +162,7 @@ createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
                                 _True ->
                                     {4000, User}
                             end;
-                        Err ->                         
+                        _Err ->                         
                             {4002, User}                            
                     end;
                 _Err ->
@@ -174,7 +175,7 @@ createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
 createUser ( User ) ->
     {4030, User}.
 
-deleteUser ( Id ) ->
+deleteUser ( _Id ) ->
     {4000, <<"not implemented yet">>}.
 
 %
@@ -213,7 +214,7 @@ dump ( import, FileName ) ->
     case OriginalNode =:= node () of        
         true -> 
             ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
-            file:rename ( Filname ++ ".erlstoredump", "imported_" ++ FileName ++ ".erlstoredump" );
+            file:rename ( FileName ++ ".erlstoredump", "imported_" ++ FileName ++ ".erlstoredump" );
         false ->            
             ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
             ?adaptor:dumpImport ( NewFileName )

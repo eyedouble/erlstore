@@ -42,6 +42,14 @@ filter ( Data, Keys, Operator, Value ) when is_list ( Keys ) andalso length ( Ke
         <<">=">> ->            
                 maps:is_key ( lists:nth(1, Keys ), Data ) andalso
                 maps:get ( lists:nth(1, Keys ), Data ) >= Value;
+        <<"fllen">> ->
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
+            is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
+            length ( maps:get ( lists:nth(1, Keys ), Data ) ) =:= Value;
+        <<"flmem">> ->
+                maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
+                is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
+                lists:member ( Value, maps:get ( lists:nth(1, Keys ), Data ) );
         <<"@">> ->
             hasAccess ( maps:get ( lists:nth(1, Keys ), Data ), Value )
     end.
