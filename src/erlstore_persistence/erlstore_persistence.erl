@@ -194,11 +194,11 @@ subscribe ( subscribe, Pid, Table ) ->
 subscribe ( listen, Pid, Table ) ->
     receive 
         {mnesia_table_event,{write,Table,{Table,_Id,Data},[],_Transaction}} ->            
-            Pid ! {2000, {create, Data } };           
+            Pid ! {2000, {create, Table, Data } };           
         {mnesia_table_event,{write,Table,{Table,_Id,Data},_OldDocument,_Transaction}} ->            
-            Pid ! {2000, {update, Data } };  
+            Pid ! {2000, {update, Table, Data } };  
         {mnesia_table_event,{delete,Table,{Table,Data},_OldData,_Transaction}} ->
-            Pid ! {2000, {delete, Data } };
+            Pid ! {2000, {delete, Table, Data } };
         _All ->
             null
     end,
