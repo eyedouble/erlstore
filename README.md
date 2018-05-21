@@ -69,7 +69,7 @@ Example object that would match:
 ```erlang 
 #{
     "id" => "c6a007de-4b82-4008-9b5c-d009e55782ae",
-    "name" => "kak",
+    "name" => "test",
     "_system" => #{
         "access" => "superadmin",
         "created" => 1519138939,
@@ -194,35 +194,17 @@ Messages are standard Erlang messages.
 
 #### Create
 ```erlang 
-{create, my_table, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 3 } }
+{create, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } }
 ```
 
 #### Update
 ```erlang 
-{update, my_table, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 9 }, #{ <<id>> => <<"my_new_document">>, <<"kakkies">> => 3 } }
+{update, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 9 }, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } }
 ```
 
 #### Delete
 ```erlang 
 {delete, my_table, <<"my_new_document">> }
-```
-
-## File storage (α)
-Work has started on filestorage. Files will be saved to disk and metadata to Erlstore. **Hence the actual files will not be
-included in Datadumps.** Access control will determine which files may be accessed by a user but it is up to you to actually 
-prevent users from actually accessing files if you wish to do so. This is beyond Erlstore's mandate.
-
-### getFileData
-```erlang 
-% NOT IMPLEMENTED YET
-```
-### updateFileData
-```erlang 
-% NOT IMPLEMENTED YET
-```
-### deleteFileData
-```erlang 
-% NOT IMPLEMENTED YET
 ```
 
 ## Data dumps
