@@ -34,22 +34,27 @@ filter ( Data, Keys, Operator, Value ) when is_list ( Keys ) andalso length ( Ke
             maps:is_key ( lists:nth(1, Keys ), Data ) andalso
             maps:get ( lists:nth(1, Keys ), Data ) < Value;
         <<"=<">> ->            
-                maps:is_key ( lists:nth(1, Keys ), Data ) andalso
-                maps:get ( lists:nth(1, Keys ), Data ) =< Value;
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso
+            maps:get ( lists:nth(1, Keys ), Data ) =< Value;
         <<">">> ->            
-                maps:is_key ( lists:nth(1, Keys ), Data ) andalso
-                maps:get ( lists:nth(1, Keys ), Data ) > Value;
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso
+            maps:get ( lists:nth(1, Keys ), Data ) > Value;
         <<">=">> ->            
-                maps:is_key ( lists:nth(1, Keys ), Data ) andalso
-                maps:get ( lists:nth(1, Keys ), Data ) >= Value;
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso
+            maps:get ( lists:nth(1, Keys ), Data ) >= Value;
+        <<"str*">> ->            
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
+            is_binary( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
+            string:find ( maps:get ( lists:nth(1, Keys ), Data ), Value ) =/= nomatch;
         <<"fllen">> ->
             maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
             is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
             length ( maps:get ( lists:nth(1, Keys ), Data ) ) =:= Value;
         <<"flmem">> ->
-                maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
-                is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
-                lists:member ( Value, maps:get ( lists:nth(1, Keys ), Data ) );
+            maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
+            is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
+            lists:member ( Value, maps:get ( lists:nth(1, Keys ), Data ) );
+        
         <<"@">> ->
             hasAccess ( maps:get ( lists:nth(1, Keys ), Data ), Value )
     end.

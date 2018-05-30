@@ -69,3 +69,11 @@ filter_flatlistmember_test ( ) ->
     ,<<"flmem">>
     ,"12" ),
   ?assert ( Result =:= true ).
+
+filter_strcontains_test ( ) ->
+  Result = erlstore_commoncrud_filter:filter ( 
+    mock ()
+    ,<<"id">>
+    ,<<"str*">>
+    ,"@" ),
+  ?assert ( Result =:= true ).

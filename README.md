@@ -91,6 +91,7 @@ Example object that would match:
 | =<            | Equal to or lower than        | 
 | >             | Greater than                  | 
 | >=            | Equal to or greater than      | 
+| str*          | String contains               | 
 | fllen         | Flat list length equals       | 
 | flmem         | Flat list has exactly member  | 
 
