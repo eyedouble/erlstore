@@ -62,6 +62,38 @@ filter_flatlistlength_test ( ) ->
     ,3 ),
   ?assert ( Result =:= true ).
 
+filter_flatlistlength_gt_test ( ) ->
+  Result = erlstore_commoncrud_filter:filter ( 
+    mock ()
+    ,<<"list">>
+    ,<<"fllen>">>
+    ,2 ),
+  ?assert ( Result =:= true ).
+
+filter_flatlistlength_gte_test ( ) ->
+  Result = erlstore_commoncrud_filter:filter ( 
+    mock ()
+    ,<<"list">>
+    ,<<"fllen>=">>
+    ,3 ),
+  ?assert ( Result =:= true ).
+
+filter_flatlistlength_lt_test ( ) ->
+  Result = erlstore_commoncrud_filter:filter ( 
+    mock ()
+    ,<<"list">>
+    ,<<"fllen<">>
+    ,4 ),
+  ?assert ( Result =:= true ).
+
+filter_flatlistlength_lte_test ( ) ->
+  Result = erlstore_commoncrud_filter:filter ( 
+    mock ()
+    ,<<"list">>
+    ,<<"fllen=<">>
+    ,3 ),
+  ?assert ( Result =:= true ).
+
 filter_flatlistmember_test ( ) ->
   Result = erlstore_commoncrud_filter:filter ( 
     mock ()
