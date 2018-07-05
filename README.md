@@ -173,24 +173,29 @@ erlstore_persistence:get ( movies, <<"abf18cca-fe78-48b7-a465-b00ae8d9fc44">> )
 >
 
 
+## Change feeds
+Change feeds allow one to receive events from a particular table by subscribing to it.
 
-## Change feeds (α)
-Erlstore currently supports basic change feeds. The Access control sytem is not yet implemented on these feeds, nor is filtering. *GEEKNOTE: Access control actualy uses the filter module to do the job hence these two go in tandem.*
+### Events
+- Create
+- Update
+- Delete
 
-The change feeds work on a per table basis. This means you will listen to changes on a specific table and receive messages if something in that table changes. It is as easy as that.
+You will receive messages if something in that table changes.
+In case of create and update events one will receive the latest document.
+In case of a delete event the last version of the deleted document is passed along.
+
+### Filtering
+All filters as described in the section filters above may be used.
+
 
 ### Subscribe
 ```erlang 
-erlstore_persistence:subscribe ( Pid, Table ).
+erlstore_persistence:subscribe ( Pid, Table, Filters).
 ```
 
 As `Pid` is the process that will receive messages and `Table` is the table to subscribe to.
 Messages are standard Erlang messages.
-
-### Change types
-- Create
-- Update
-- Delete
 
 #### Structure
 ```erlang 
@@ -199,17 +204,17 @@ Messages are standard Erlang messages.
 
 #### Create
 ```erlang 
-{create, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } }
+{2101, {create, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } } }
 ```
 
 #### Update
 ```erlang 
-{update, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 9 }, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } }
+{2102, {update, my_table, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 9 }, #{ <<id>> => <<"my_new_document">>, <<"tests">> => 3 } } }
 ```
 
 #### Delete
 ```erlang 
-{delete, my_table, <<"my_new_document">> }
+{2102, {delete, my_table, <<"my_new_document">> } }
 ```
 
 ## Data dumps
@@ -233,9 +238,12 @@ Will import and if applicable automatically do node renaming in the dump file be
 
 ## Erlstore status codes
 
-| Code          | Type          | Message|
-| ------------- |:-------------:| :-----:|
-| 2000          | Ok            | General success status |
+| Code          | Type                      | Message                            |
+| ------------- |:-------------------------:| :---------------------------------:|
+| 2000          | Ok                        | General success status |
+| 2100          | Changefeeds - create      | General success status |
+| 2101          | Changefeeds - update      | General success status |
+| 2102          | Changefeeds - delete      | General success status |
 | 4000          | Error         | General error status |
 | 4001          | Error         | Resource does not excist |
 | 4002          | Error         | Cannot create duplicate |

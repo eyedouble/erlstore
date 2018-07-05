@@ -1,5 +1,5 @@
 
--module(erlstore_commoncrud_filter_tests).
+-module(erlstore_common_filter_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -15,7 +15,7 @@ mock ( ) ->
 
 
 filter_onelevel_test ( ) ->
-    Result = erlstore_commoncrud_filter:filter ( 
+    Result = erlstore_common_filter:filter ( 
       mock ()
       ,<<"_system">>
       ,<<"isset">>
@@ -23,7 +23,7 @@ filter_onelevel_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_threelevel_test ( ) ->
-    Result = erlstore_commoncrud_filter:filter ( 
+    Result = erlstore_common_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"isset">>
@@ -31,7 +31,7 @@ filter_threelevel_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_isnotset_test ( ) ->
-    Result = erlstore_commoncrud_filter:filter ( 
+    Result = erlstore_common_filter:filter ( 
       mock ()
       ,<<"_system.times.created.kak">>
       ,<<"isnotset">>
@@ -39,7 +39,7 @@ filter_isnotset_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_isnotset_negative_test ( ) ->
-    Result = erlstore_commoncrud_filter:filter ( 
+    Result = erlstore_common_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"isnotset">>
@@ -47,7 +47,7 @@ filter_isnotset_negative_test ( ) ->
     ?assert ( Result =:= false ).
   
 filter_equals_test ( ) ->
-    Result = erlstore_commoncrud_filter:filter ( 
+    Result = erlstore_common_filter:filter ( 
       mock ()
       ,<<"_system.times.created">>
       ,<<"=">>
@@ -55,7 +55,7 @@ filter_equals_test ( ) ->
     ?assert ( Result =:= true ).
 
 filter_flatlistlength_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"fllen">>
@@ -63,7 +63,7 @@ filter_flatlistlength_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_flatlistlength_gt_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"fllen>">>
@@ -71,7 +71,7 @@ filter_flatlistlength_gt_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_flatlistlength_gte_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"fllen>=">>
@@ -79,7 +79,7 @@ filter_flatlistlength_gte_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_flatlistlength_lt_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"fllen<">>
@@ -87,7 +87,7 @@ filter_flatlistlength_lt_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_flatlistlength_lte_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"fllen=<">>
@@ -95,7 +95,7 @@ filter_flatlistlength_lte_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_flatlistmember_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"list">>
     ,<<"flmem">>
@@ -103,7 +103,7 @@ filter_flatlistmember_test ( ) ->
   ?assert ( Result =:= true ).
 
 filter_strcontains_test ( ) ->
-  Result = erlstore_commoncrud_filter:filter ( 
+  Result = erlstore_common_filter:filter ( 
     mock ()
     ,<<"id">>
     ,<<"str*">>

@@ -5,7 +5,7 @@
 
 -include_lib("stdlib/include/qlc.hrl").
 
--include("dev.hrl").
+-include("../../dev.hrl").
 
 -export([
     start/1
@@ -19,7 +19,10 @@
     ,infoTable/1
     ,createTable/1
     ,deleteTable/1
-    ,subscribe/1
+    ,subscribe/3
+    ,subscribe/4
+    ,subscribe_subscribe/3
+    ,subscribe_listen/3
     ,dumpExport/1
     ,dumpImport/1
     ,dumpGetOriginalNode/1
@@ -51,7 +54,7 @@ getAll ( Table, User ) ->
                 Data                    
                 ||                    
                 {_Type, _DId, Data} <- mnesia:table(Table),
-                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
+                erlstore_common_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
 
             ]
         ) )
@@ -67,7 +70,7 @@ get ( Table, Id, User ) ->
                 ||                    
                 {_Type, DId, Data} <- mnesia:table(Table),     
                 DId =:= Id,            
-                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
+                erlstore_common_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ))   
 
             ]
         ) )
@@ -96,7 +99,7 @@ write ( Table, Id, Data ) ->
 delete ( Table, Id, User ) ->
     F = fun() ->    
         [{_Table, _Id, Data }] = mnesia:read ( {Table, Id} ),
-        case erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )) of
+        case erlstore_common_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )) of
             true -> 
                 mnesia:delete ( Table, Id, write )            
         end       
@@ -118,9 +121,9 @@ filter ( Table, Filters, User ) ->
                 Data                    
                 ||                    
                 {_Type, _DId, Data} <- mnesia:table(Table),
-                erlstore_commoncrud_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )),
+                erlstore_common_filter:filter ( Data, <<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User )),
                 lists:foldl(fun( { Property, Operator, Value }, Sum) ->                    
-                    case { Sum, erlstore_commoncrud_filter:filter ( Data, Property, Operator, Value ) } of
+                    case { Sum, erlstore_common_filter:filter ( Data, Property, Operator, Value ) } of
                         {false, _ } ->
                             false;
                         {true, CheckResponse} ->
@@ -184,8 +187,37 @@ deleteUser ( ) ->
 %
 % Changefeed
 %
-subscribe ( Table ) ->
-    mnesia:subscribe ( {table, Table, detailed} ).    
+subscribe ( Pid, Table, User ) ->
+    spawn ( ?MODULE, subscribe, [subscribe, Pid, Table, [], User ] ).
+
+subscribe ( Pid, Table, Filters, User ) ->
+    lists:append ( [ [{<<"_system.access">>, <<"@">>, maps:get( <<"domain">>, User ) }], Filters ] ),
+    spawn ( ?MODULE, subscribe_subscribe, [Pid, Table, Filters] ).
+
+subscribe_subscribe ( Pid, Table, Filters ) ->
+    mnesia:subscribe ( {table, Table, detailed} ),
+    subscribe_listen ( Pid, Table, Filters ).
+
+subscribe_listen ( Pid, Table, Filters ) ->    
+    receive 
+        {mnesia_table_event,{write,Table,{Table,_Id,Data},[],_Transaction}} ->
+            case erlstore_common_changefeed:filter ( Filters, Data ) of 
+                [] -> false;
+                FilteredData -> erlstore_common_changefeed:notify ( Pid, create, Table, FilteredData )
+            end;                                
+        {mnesia_table_event,{write,Table,{Table,_Id,Data},_OldDocument,_Transaction}} ->    
+            case erlstore_common_changefeed:filter ( Filters, Data ) of
+                [] -> false;
+                FilteredData -> erlstore_common_changefeed:notify ( Pid, update, Table, FilteredData )
+            end;        
+        {mnesia_table_event,{delete,Table,{Table,_Id},[{Table, _Id, OldData}],_Transaction}} ->
+            case erlstore_common_changefeed:filter ( Filters, OldData ) of
+                [] -> false;
+                FilteredData -> erlstore_common_changefeed:notify ( Pid, delete, Table, FilteredData )
+            end;
+        _All -> null
+    end,
+    subscribe_listen ( Pid, Table, Filters ).
 
 
 %

@@ -1,7 +1,7 @@
 
--module(erlstore_commoncrud_filter).
+-module(erlstore_common_filter).
 
--include("dev.hrl").
+-include("../dev.hrl").
 
 -export([filter/4]).
 
@@ -69,8 +69,7 @@ filter ( Data, Keys, Operator, Value ) when is_list ( Keys ) andalso length ( Ke
         <<"flmem">> ->
             maps:is_key ( lists:nth(1, Keys ), Data ) andalso 
             is_list( maps:get ( lists:nth(1, Keys ), Data ) ) andalso
-            lists:member ( Value, maps:get ( lists:nth(1, Keys ), Data ) );
-        
+            lists:member ( Value, maps:get ( lists:nth(1, Keys ), Data ) );  
         <<"@">> ->
             hasAccess ( maps:get ( lists:nth(1, Keys ), Data ), Value )
     end.

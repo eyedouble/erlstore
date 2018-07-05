@@ -1,7 +1,7 @@
 
 -module(erlstore_persistence).
 
--include("dev.hrl").
+-include("../dev.hrl").
 
 -define(adaptor, erlstore_mnesia_adaptor).
 -define(superuser, #{ <<"id">> => <<"superadmin">>, <<"domain">> => <<"superadmin:0">> } ).
@@ -30,8 +30,8 @@
     ,deleteDomain/1
     ,createUser/1
     ,deleteUser/1
-    ,subscribe/2
     ,subscribe/3
+    ,subscribe/4
     ,dump/2
 ]).
 
@@ -72,7 +72,7 @@ update ( Table, Data ) ->
     update ( Table, Data, ?superuser ).
 
 update ( Table, Data=#{ <<"id">> := Id }, User ) when is_map ( Data ) -> 
-    Object = erlstore_commoncrud_system:generate ( Data, User ),    
+    Object = erlstore_common_system:generate ( Data, User ),    
     ?adaptor:write ( Table, Id, Object ).
 
 delete ( Table, Id ) ->
@@ -88,7 +88,9 @@ filter ( Table, Filters, User ) when is_map ( User ) ->
     ?adaptor:filter ( Table, Filters, User ).
 
 
+%
 % Tables
+%
 listTables ( ) ->
     {2000, [Table||Table <- ?adaptor:listTables ( ), Table =/= users, Table =/= domains] }.
 
@@ -128,7 +130,7 @@ createDomain ( Domain ) ->
     {4020, Domain}.
 
 updateDomain ( Domain=#{ <<"id">> := Id, <<"groups">> := Groups } ) when is_list ( Groups ) ->    
-    DomainWithSystem = erlstore_commoncrud_system:generate ( 
+    DomainWithSystem = erlstore_common_system:generate ( 
         Domain, 
         #{ <<"id">> => Id, <<"domain">> => <<Id/binary, ":0">> } 
     ),
@@ -156,7 +158,7 @@ createUser ( User=#{ <<"id">> := Id, <<"domain">> := Domain } ) ->
                 {2000, _Domain} ->    
                     case ?MODULE:get ( users, Id ) of
                         {4000, _NoMatch} ->
-                            case ?adaptor:write ( users, Id, erlstore_commoncrud_system:generate ( User, User ) ) of
+                            case ?adaptor:write ( users, Id, erlstore_common_system:generate ( User, User ) ) of
                                 {2000, CreatedUser } ->
                                     {2000, CreatedUser};
                                 _True ->
@@ -181,33 +183,25 @@ deleteUser ( _Id ) ->
 %
 % Changefeed
 %
+%
 subscribe ( Pid, Table ) ->
-    spawn ( ?MODULE, subscribe, [subscribe, Pid, Table ] ).
+    subscribe ( Pid, Table, [], ?superuser ).
 
-subscribe ( subscribe, Pid, Table ) ->
-    ?adaptor:subscribe ( Table ),
-    subscribe ( listen, Pid, Table );
+subscribe ( Pid, Table, User ) when is_map ( User ) ->
+    subscribe ( Pid, Table, [], User );
 
-%
-% STILL NEED TO IMPLEMENT FILTERING ON THE CHANGE FEED
-%
-subscribe ( listen, Pid, Table ) ->
-    receive 
-        {mnesia_table_event,{write,Table,{Table,_Id,Data},[],_Transaction}} ->            
-            Pid ! {2000, {create, Table, Data } };           
-        {mnesia_table_event,{write,Table,{Table,_Id,Data},_OldDocument,_Transaction}} ->            
-            Pid ! {2000, {update, Table, Data } };  
-        {mnesia_table_event,{delete,Table,{Table,Data},_OldData,_Transaction}} ->
-            Pid ! {2000, {delete, Table, Data } };
-        _All ->
-            null
-    end,
-    subscribe ( listen, Pid, Table ).
+subscribe ( Pid, Table, Filters ) when is_list ( Filters ) ->
+    subscribe ( Pid, Table, Filters, ?superuser ).   
+
+subscribe ( Pid, Table, Filters, User ) ->
+    case isTable ( Table ) of 
+        false -> {4001, Table};
+        true -> ?adaptor:subscribe ( Pid, Table, Filters, User )
+    end.
 
 %
 % Data dumping
 %
-
 dump ( import, FileName ) ->  
     OriginalNode = ?adaptor:dumpGetOriginalNode ( FileName ++ ".erlstoredump" ),   
     NewFileName = FileName ++ "-nc." ++ atom_to_list( node() ) ++ ".erlstoredump",

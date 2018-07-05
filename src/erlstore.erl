@@ -24,6 +24,7 @@ start(_Type, _Args) ->
     % bootWebsocket ( 8091 ),
     % ------------------------%
 
+
     % ----- DEV ------ % 
     % {2000, X} = erlstore_persistence:createDomain ( #{ 
     %     <<"name">> => <<"test">>,
@@ -38,7 +39,7 @@ start(_Type, _Args) ->
     %     <<"password">> => Hash,
     %     <<"domain">> => <<Id/binary, ":0">>
     % } ),
-   
+
     % ?PRINT(Y),
     % ------------------------%
     Response.

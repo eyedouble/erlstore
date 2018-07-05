@@ -1,7 +1,7 @@
 
 -module(erlstore_interface_http_server).
 
--include("dev.hrl").
+-include("../../dev.hrl").
 
 - export([
     start/1
@@ -9,6 +9,18 @@
 ]).
 
 start ( Port ) ->   
+
+    case ranch_sup:start_link ( ) of
+        {ok, RanchPid} -> RanchPid;
+        {error,{already_started, RanchPid}} -> RanchPid
+    end, 
+    link ( RanchPid ),
+
+    case cowboy_sup:start_link ( ) of
+        {ok, CowboyPid} -> CowboyPid;
+        {error,{already_started, CowboyPid}} -> CowboyPid
+    end, 
+    link ( RanchPid ),  
     
     Handlers = [             
         {"/domains/[:id]", erlstore_interface_http_domains_handler, [] }

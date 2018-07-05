@@ -1,5 +1,5 @@
 
--module (erlstore_commoncrud_system).
+-module (erlstore_common_system).
 
 -export([
     generate/2

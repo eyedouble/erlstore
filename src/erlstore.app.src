@@ -7,8 +7,7 @@
         {mod, {erlstore, []}},
         {applications, [                     
             kernel,
-            stdlib,            
-            cowboy,     
+            stdlib,
             jsone,            
             uuid,
             pbkdf2,
