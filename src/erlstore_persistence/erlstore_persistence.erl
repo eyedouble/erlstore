@@ -30,6 +30,7 @@
     ,deleteDomain/1
     ,createUser/1
     ,deleteUser/1
+    ,subscribe/2
     ,subscribe/3
     ,subscribe/4
     ,dump/2
@@ -215,4 +216,8 @@ dump ( import, FileName ) ->
     end;
 
 dump ( export, FileName ) ->
-    ?adaptor:dumpExport ( FileName ++ "." ++ atom_to_list( node() ) ++ ".erlstoredump" ).
+    FullFileName = FileName ++ "." ++ atom_to_list( node() ) ++ ".erlstoredump",
+    case ?adaptor:dumpExport ( FullFileName ) of
+       ok -> {ok, FullFileName};
+       Error -> Error
+    end.
