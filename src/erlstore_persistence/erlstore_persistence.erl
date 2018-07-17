@@ -33,7 +33,8 @@
     ,subscribe/2
     ,subscribe/3
     ,subscribe/4
-    ,dump/2
+    ,dump_export/1
+    ,dump_import/1
 ]).
 
 % Instance
@@ -184,7 +185,6 @@ deleteUser ( _Id ) ->
 %
 % Changefeed
 %
-%
 subscribe ( Pid, Table ) ->
     subscribe ( Pid, Table, [], ?superuser ).
 
@@ -201,23 +201,32 @@ subscribe ( Pid, Table, Filters, User ) ->
     end.
 
 %
-% Data dumping
+%   Data dumping
 %
-dump ( import, FileName ) ->  
-    OriginalNode = ?adaptor:dumpGetOriginalNode ( FileName ++ ".erlstoredump" ),   
-    NewFileName = FileName ++ "-nc." ++ atom_to_list( node() ) ++ ".erlstoredump",
-    case OriginalNode =:= node () of        
+dump_import ( FileName ) ->        
+    case filelib:is_file ( FileName ) of
         true -> 
-            ?adaptor:dumpImport ( FileName ++ ".erlstoredump" ),
-            file:rename ( FileName ++ ".erlstoredump", "imported_" ++ FileName ++ ".erlstoredump" );
-        false ->            
-            ?adaptor:dumpChangeNode ( FileName ++ ".erlstoredump", NewFileName, OriginalNode, node() ),
-            ?adaptor:dumpImport ( NewFileName )
-    end;
+            Split = string:split ( FileName, ".", trailing ),
+            {FileName2, Ext} = {lists:nth (1, Split ), "." ++ lists:last( Split )},
+            OriginalNode = ?adaptor:dumpGetOriginalNode ( FileName ),            
+            ImportFileName = case OriginalNode =:= node () of
+                true -> FileName;                   
+                false ->           
+                    NodeChangeFileName = FileName2 ++ "_nc." ++ atom_to_list( node() ) ++ Ext, 
+                    ?adaptor:dumpChangeNode ( FileName, NodeChangeFileName, OriginalNode, node() ),
+                    NodeChangeFileName
+            end,
+            case ?adaptor:dumpImport ( ImportFileName ) of         
+                {aborted, Reason} -> {error, Reason};     
+                {atomic, _Tables} ->  
+                    ImportedFileName = string:join ( lists:join ( "_imported" ++ Ext, string:split ( ImportFileName, Ext, all ) ), "" ), 
+                    file:rename ( ImportFileName, ImportedFileName )
+            end;
+        false -> {error, "File does not exist"}
+    end.
 
-dump ( export, FileName ) ->
-    FullFileName = FileName ++ "." ++ atom_to_list( node() ) ++ ".erlstoredump",
-    case ?adaptor:dumpExport ( FullFileName ) of
-       ok -> {ok, FullFileName};
+dump_export ( FileName ) ->  
+    case ?adaptor:dumpExport ( FileName ) of
+       ok -> {ok, FileName};
        Error -> Error
     end.

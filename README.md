@@ -217,23 +217,22 @@ Messages are standard Erlang messages.
 {2102, {delete, my_table, <<"my_new_document">> } }
 ```
 
-## Data dumps
-Erlstore currently supports dumping to an implementstion specific data file. Erlstore uses mnesia to store data.
-One can dump to a mnesia specific binary dump-file. Erlstore can import this dump-file as well
+## Data dumping
+Erlstore can dumping data to a binary file. This is ideal for backup and export/import purposes.
 
-**Mnesia and thuss Erlstore data is node specific for distribution purposes. This means a dump needs to be made, renamed to be used with another node and imported on that node. Erlstore handles this for simply dump(export, "folder/file") on node A and dump(import, "folder/file") on node B.**
-
+#### dump_export/1
 ```erlang 
-erlstore_persistence:dump ( export, "folder/to/dump/to/filename" ).
+erlstore_persistence:dump_export ( "data/dump.erlstore" ).
 ```
-Will create a file `filename.node@192.168.0.1.erlstore` in the directory provided in the path.
 
-
+#### dump_import/1
 ```erlang 
-erlstore_persistence:dump ( import, "folder/to/dump/to/filename.node@192.168.0.1" ).
+erlstore_persistence:dump_import ( "data/dump.erlstore" ).
 ```
-Will import and if applicable automatically do node renaming in the dump file before import.
-*Note that the node name in the file name are merely for your information and the node recognition is not dependend on the file's name*
+
+**Erlstore's binary dump files are implementation specific. Erlstore uses Erlang Mnesia to store data. Mnesia and thuss Erlstore data is node specific for distribution purposes. This means a data dump made on one node must be altered to be used on another. Erlstore handles this automatically for you. The if such alteration is performed the file will be renamed to `{filename}._nc.{extension}`. Once Erlstore has completed importing a data file it will rename the dat file to `{filename}._imported.{extension}`**
+
+*Please note the functions `dump/2` have been deprecated and removed from the api.*
 
 
 ## Erlstore status codes
